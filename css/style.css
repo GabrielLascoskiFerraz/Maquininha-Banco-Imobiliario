@@ -1034,6 +1034,11 @@ input[type='number'] {
 .setup-card {
   display: grid;
   gap: 12px;
+  max-height: min(92vh, 860px);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
+  padding-bottom: 12px;
 }
 
 .settings-card {
@@ -1611,6 +1616,11 @@ input[type='number'] {
 #setupPlayersList {
   display: grid;
   gap: 8px;
+  max-height: min(42vh, 360px);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
+  padding-right: 2px;
 }
 
 .setup-player-row {
@@ -1723,6 +1733,15 @@ input[type='number'] {
     grid-template-columns: 1fr;
   }
 
+  #setupModal {
+    align-items: flex-start;
+    padding: max(12px, env(safe-area-inset-top)) 12px max(12px, env(safe-area-inset-bottom));
+  }
+
+  .setup-card {
+    max-height: calc(100dvh - max(24px, env(safe-area-inset-top) + env(safe-area-inset-bottom)));
+  }
+
   .settings-player-row {
     grid-template-columns: 1fr;
   }
@@ -1760,6 +1779,24 @@ input[type='number'] {
 }
 
 @media (max-width: 520px) {
+  .setup-card {
+    padding: 14px 12px;
+    gap: 10px;
+  }
+
+  .setup-players {
+    padding: 10px;
+  }
+
+  .setup-players-head {
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+
+  #setupPlayersList {
+    max-height: min(45vh, 320px);
+  }
+
   .summary-card {
     width: 100%;
     padding: 14px 12px;
