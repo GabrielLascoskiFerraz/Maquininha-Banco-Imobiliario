@@ -1,0 +1,181 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <meta name="theme-color" content="#0f766e" />
+    <meta name="description" content="Banco digital para partidas de Banco Imobiliário." />
+    <link rel="manifest" href="./manifest.json" />
+    <link rel="icon" href="./assets/icons/icon-192.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="./css/style.css" />
+    <title>Banco Imobiliário</title>
+  </head>
+  <body>
+    <div class="app-shell">
+      <header class="app-header">
+        <div>
+          <h1>Banco Imobiliário</h1>
+          <p>Partida em andamento</p>
+        </div>
+        <div class="header-actions">
+          <button id="summaryBtn" class="icon-btn trophy-btn" type="button" aria-label="Hall da fortuna">🏆</button>
+          <button id="resetBtn" class="icon-btn" type="button" aria-label="Configurações e reset">⚙️</button>
+        </div>
+      </header>
+
+      <main class="app-main">
+        <section id="playerSelector" class="player-selector" aria-label="Selecionar jogador"></section>
+
+        <section id="activePlayerCard" class="active-player-card">
+          <h2 id="activePlayerName">-</h2>
+          <p>Saldo atual</p>
+          <strong id="activePlayerBalance">$0</strong>
+        </section>
+
+        <section class="actions-grid" aria-label="Ações rápidas">
+          <button id="receiveBtn" type="button" class="action-btn receive">➕ RECEBER</button>
+          <button id="payBtn" type="button" class="action-btn pay">➖ PAGAR</button>
+        </section>
+
+        <section class="dice-panel" aria-label="Rolagem de dados">
+          <div class="dice-head">
+            <h3>Dados</h3>
+            <button id="rollDiceBtn" type="button" class="secondary-btn">🎲 Rolar dados</button>
+          </div>
+          <div id="diceStage" class="dice-stage">
+            <div id="diceOne" class="die" data-value="1" aria-label="Dado 1">
+              <span class="pip"></span><span class="pip"></span><span class="pip"></span>
+              <span class="pip"></span><span class="pip"></span><span class="pip"></span>
+              <span class="pip"></span><span class="pip"></span><span class="pip"></span>
+            </div>
+            <div id="diceTwo" class="die" data-value="1" aria-label="Dado 2">
+              <span class="pip"></span><span class="pip"></span><span class="pip"></span>
+              <span class="pip"></span><span class="pip"></span><span class="pip"></span>
+              <span class="pip"></span><span class="pip"></span><span class="pip"></span>
+            </div>
+          </div>
+          <p id="diceResult" class="dice-result">Resultado: -</p>
+        </section>
+
+        <section class="transfer-panel" aria-label="Transferência">
+          <h3>Transferir</h3>
+          <div class="transfer-controls">
+            <div class="transfer-field">
+              <span>Origem</span>
+              <div class="transfer-select">
+                <button id="transferFromBtn" type="button" class="transfer-select-btn"></button>
+                <div id="transferFromMenu" class="transfer-select-menu"></div>
+              </div>
+            </div>
+            <div class="transfer-field">
+              <span>Destino</span>
+              <div class="transfer-select">
+                <button id="transferToBtn" type="button" class="transfer-select-btn"></button>
+                <div id="transferToMenu" class="transfer-select-menu"></div>
+              </div>
+            </div>
+            <button id="transferValueBtn" type="button" class="secondary-btn">Definir valor</button>
+            <p id="transferValueLabel">Valor: $0</p>
+            <button id="transferConfirmBtn" type="button" class="primary-btn">Confirmar transferência</button>
+          </div>
+        </section>
+
+        <section class="history-panel" aria-label="Histórico de transações">
+          <div class="history-head">
+            <h3>Histórico</h3>
+            <button id="clearHistoryBtn" type="button" class="ghost-btn">Limpar</button>
+          </div>
+          <ul id="historyList"></ul>
+        </section>
+      </main>
+    </div>
+
+    <div id="setupModal" class="modal" role="dialog" aria-modal="true" aria-labelledby="setupTitle">
+      <div class="modal-card setup-card">
+        <h2 id="setupTitle">Nova partida</h2>
+        <p>Adicione de 2 a 8 jogadores e defina o saldo inicial.</p>
+
+        <label>
+          Saldo inicial por jogador
+          <input id="startingBalance" type="number" min="1" step="1" value="1500" />
+        </label>
+
+        <div class="setup-players">
+          <div class="setup-players-head">
+            <h3>Jogadores</h3>
+            <button id="addPlayerBtn" type="button" class="secondary-btn">Adicionar jogador</button>
+          </div>
+          <div id="setupPlayersList"></div>
+        </div>
+
+        <button id="startGameBtn" type="button" class="primary-btn">Iniciar partida</button>
+      </div>
+    </div>
+
+    <div id="valueModal" class="modal" role="dialog" aria-modal="true" aria-labelledby="valueTitle" aria-hidden="true">
+      <div class="modal-card value-card">
+        <h2 id="valueTitle">Valor</h2>
+        <p id="valueModalContext">Defina o valor da operação</p>
+        <output id="valueDisplay" for="numpad">$0</output>
+        <div id="numpad" class="numpad">
+          <button data-digit="1" type="button">1</button>
+          <button data-digit="2" type="button">2</button>
+          <button data-digit="3" type="button">3</button>
+          <button data-digit="4" type="button">4</button>
+          <button data-digit="5" type="button">5</button>
+          <button data-digit="6" type="button">6</button>
+          <button data-digit="7" type="button">7</button>
+          <button data-digit="8" type="button">8</button>
+          <button data-digit="9" type="button">9</button>
+          <button data-action="clear" type="button">C</button>
+          <button data-digit="0" type="button">0</button>
+          <button data-action="backspace" type="button">⌫</button>
+        </div>
+        <div class="modal-actions">
+          <button id="cancelValueBtn" type="button" class="secondary-btn">Cancelar</button>
+          <button id="confirmValueBtn" type="button" class="primary-btn">Confirmar</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="confirmModal" class="modal" role="dialog" aria-modal="true" aria-hidden="true">
+      <div class="modal-card confirm-card">
+        <h2>Confirmação</h2>
+        <p id="confirmMessage">Deseja continuar?</p>
+        <div class="modal-actions">
+          <button id="confirmNoBtn" type="button" class="secondary-btn">Cancelar</button>
+          <button id="confirmYesBtn" type="button" class="primary-btn danger">Confirmar</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="settingsModal" class="modal" role="dialog" aria-modal="true" aria-hidden="true">
+      <div class="modal-card settings-card">
+        <h2>Configurações da partida</h2>
+        <p>Renomeie jogadores, ajuste cores e gerencie a partida atual.</p>
+        <div class="settings-top-actions">
+          <button id="settingsAddPlayerBtn" type="button" class="secondary-btn">Adicionar jogador</button>
+        </div>
+        <div id="settingsPlayersList" class="settings-players-list"></div>
+        <div class="settings-actions">
+          <button id="settingsCloseBtn" type="button" class="secondary-btn">Fechar</button>
+          <button id="settingsSaveBtn" type="button" class="primary-btn">Salvar alterações</button>
+          <button id="settingsResetBtn" type="button" class="primary-btn danger">Resetar partida</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="summaryModal" class="modal summary-modal" role="dialog" aria-modal="true" aria-hidden="true">
+      <div class="modal-card summary-card">
+        <h2>Hall da Fortuna</h2>
+        <p>Ranking atual da partida</p>
+        <div id="summaryPodium" class="summary-podium"></div>
+        <div id="summaryLeaderGap" class="summary-leader-gap"></div>
+        <div id="summaryList" class="summary-list"></div>
+        <button id="summaryCloseBtn" type="button" class="primary-btn">Fechar placar</button>
+      </div>
+    </div>
+
+    <script type="module" src="./js/ui.js"></script>
+  </body>
+</html>
